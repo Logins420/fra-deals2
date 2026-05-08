@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FRA Deals ✈</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0a0a0a;--card:#111;--border:#1e1e1e;--text:#f0ece4;--muted:#555;--green:#4ade80;--orange:#f4a261;--red:#ff4d4d;--purple:#a78bfa}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#222}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:99;background:var(–bg);border-bottom:1px solid var(–border)}
+.ticker{background:var(–red);padding:7px 24px;display:flex;gap:32px;overflow:hidden;white-space:nowrap}
+.ticker span{font-size:11px;color:#fff}
+.ticker strong{font-weight:600}
+.header-inner{display:flex;justify-content:space-between;align-items:center;padding:14px 28px}
+.logo{font-family:‘Fraunces’,serif;font-size:22px;font-weight:700;letter-spacing:-.5px}
+.logo small{font-size:10px;color:var(–muted);letter-spacing:3px;font-family:‘IBM Plex Mono’,monospace;font-weight:400;margin-left:12px}
+.live-dot{display:flex;gap:6px;align-items:center;font-size:11px;color:var(–green)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(–green);animation:blink 2s infinite}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:210px 1fr;gap:28px;max-width:1160px;margin:0 auto;padding:32px 24px}
+
+/* ── SIDEBAR ── */
+aside{position:sticky;top:88px;height:fit-content}
+.filter-label{font-size:10px;color:var(–muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.filter-section{margin-bottom:22px}
+.pill-btn{display:block;width:100%;text-align:left;background:transparent;border:none;border-radius:6px;color:var(–muted);padding:7px 11px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:3px}
+.pill-btn:hover{color:var(–text)}
+.pill-btn.active{background:var(–text);color:var(–bg)}
+.pill-btn.active-soft{background:#1a1a1a;border:1px solid #2a2a2a;color:var(–text)}
+.stat-box{background:var(–card);border:1px solid var(–border);border-radius:10px;padding:16px;margin-top:24px}
+.stat-num{font-family:‘Fraunces’,serif;font-size:26px;color:var(–green)}
+
+/* ── MAIN ── */
+main{}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.toolbar-info{font-size:11px;color:var(–muted)}
+.sort-row{display:flex;gap:8px}
+.sort-btn{background:transparent;border:1px solid transparent;border-radius:6px;color:var(–muted);padding:5px 10px;font-size:10px;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;transition:all .15s}
+.sort-btn.active{border-color:#2a2a2a;color:var(–purple)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+
+/* ── CARD ── */
+.card{background:var(–card);border:1px solid var(–border);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s;cursor:default}
+.card:hover{transform:translateY(-3px)}
+.card-top{background:#161616;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start}
+.city-name{font-family:‘Fraunces’,serif;font-size:16px;font-weight:600}
+.city-sub{font-size:10px;color:var(–muted);margin-top:2px}
+.heat-badge{font-size:10px;font-weight:600;letter-spacing:1px}
+.old-price{font-size:11px;color:var(–muted);text-decoration:line-through;margin-top:2px}
+.price-row{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:flex-end}
+.price-main{font-family:‘Fraunces’,serif;font-size:34px;font-weight:600;line-height:1}
+.save-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;margin-left:8px}
+.price-sub{font-size:11px;color:var(–muted);margin-top:4px}
+.flight-info{font-size:11px;color:#888;text-align:right}
+.tags{padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10px;padding:3px 9px;border-radius:5px;background:#1a1a1a;color:var(–muted)}
+.tag.warn{color:var(–orange);background:#f4a26118}
+.tag.nonstop{color:var(–green);background:#4ade8018}
+.card-actions{padding:0 16px 14px;display:flex;gap:8px}
+.btn-score{flex:1;background:transparent;border:1px solid #2a2a2a;border-radius:8px;color:var(–muted);padding:8px;font-size:11px;cursor:pointer;font-family:inherit;letter-spacing:1px;transition:all .15s}
+.btn-score:hover{border-color:var(–purple);color:var(–purple)}
+.btn-score.scored{color:var(–purple);border-color:#a78bfa44}
+.btn-book{flex:2;background:var(–text);border:none;border-radius:8px;color:var(–bg);padding:8px 14px;font-size:12px;cursor:pointer;font-family:‘Fraunces’,serif;font-weight:600;transition:opacity .15s;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.btn-book:hover{opacity:.85}
+.ai-panel{border-top:1px solid #1a1a1a;padding:12px 16px;background:#0d0d0d}
+.ai-inner{display:flex;gap:14px;align-items:center}
+.score-ring-wrap{flex-shrink:0}
+.ai-verdict{font-size:12px;color:#aaa;line-height:1.6}
+.ai-label{font-size:10px;color:var(–muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+
+/* ── STATES ── */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px;gap:16px;color:var(–muted)}
+.spinner{width:28px;height:28px;border:2px solid #1e1e1e;border-top-color:var(–green);border-radius:50%;animation:spin .7s linear infinite}
+.empty{text-align:center;padding:60px;color:#333}
+.error-box{background:#1a0a0a;border:1px solid #3a1a1a;border-radius:10px;padding:20px;color:#ff8080;font-size:13px;line-height:1.7}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .35s ease both}
+
+@media(max-width:700px){.layout{grid-template-columns:1fr}aside{position:static}}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="ticker" id="ticker">
+    <span>🔴 LOADING LIVE DEALS FROM FRANKFURT...</span>
+  </div>
+  <div class="header-inner">
+    <div>
+      <span class="logo">✈ FRA Deals <small>FRANKFURT → WORLD</small></span>
+    </div>
+    <div style="display:flex;gap:20px;align-items:center">
+      <span style="font-size:11px;color:var(--muted)" id="update-time"></span>
+      <div class="live-dot"><div class="dot"></div> LIVE</div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ── SIDEBAR ── -->
+  <aside>
+    <div class="filter-label" style="margin-bottom:18px">Filters</div>
+
+```
+<div class="filter-section">
+  <div class="filter-label">Region</div>
+  <button class="pill-btn active" onclick="setRegion('All',this)">All</button>
+  <button class="pill-btn" onclick="setRegion('North America',this)">North America</button>
+  <button class="pill-btn" onclick="setRegion('South America',this)">South America</button>
+  <button class="pill-btn" onclick="setRegion('Asia',this)">Asia</button>
+  <button class="pill-btn" onclick="setRegion('Middle East',this)">Middle East</button>
+  <button class="pill-btn" onclick="setRegion('Africa',this)">Africa</button>
+  <button class="pill-btn" onclick="setRegion('Oceania',this)">Oceania</button>
+</div>
+
+<div class="filter-section">
+  <div class="filter-label">Stops</div>
+  <button class="pill-btn active-soft" id="stops-all" onclick="setStops('all')">Any stops</button>
+  <button class="pill-btn" id="stops-nonstop" onclick="setStops('nonstop')">✈ Nonstop only</button>
+</div>
+
+<div class="filter-section">
+  <div class="filter-label">Max price</div>
+  <div style="font-family:'Fraunces',serif;font-size:24px;margin-bottom:10px" id="price-label">€800</div>
+  <input type="range" id="price-range" min="100" max="2000" value="2000"
+    oninput="setMaxPrice(this.value)"
+    style="-webkit-appearance:none;width:100%;height:3px;background:#222;border-radius:2px;outline:none;cursor:pointer" />
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;margin-top:4px"><span>€100</span><span>€2000</span></div>
+</div>
+
+<div class="stat-box">
+  <div class="filter-label">Selection stats</div>
+  <div class="stat-num" id="stat-savings">€0</div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:10px">avg saving per deal</div>
+  <div style="font-size:12px;color:#888" id="stat-count">0 deals · from FRA</div>
+</div>
+```
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+
+  <main>
+    <div class="toolbar">
+      <span class="toolbar-info" id="result-count">Loading deals…</span>
+      <div class="sort-row">
+        <button class="sort-btn active" onclick="setSort('savings',this)">Savings ↓</button>
+        <button class="sort-btn" onclick="setSort('price',this)">Price ↓</button>
+        <button class="sort-btn" onclick="setSort('duration',this)">Duration ↓</button>
+      </div>
+    </div>
+
+```
+<div id="content">
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <div style="font-size:12px;letter-spacing:2px">FETCHING LIVE PRICES FROM GOOGLE FLIGHTS…</div>
+    <div style="font-size:11px;color:#333">This takes ~15 seconds for all routes</div>
+  </div>
+</div>
+```
+
+  </main>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:18px 24px;text-align:center">
+  <span style="font-size:10px;color:#2a2a2a;letter-spacing:2px">FRA DEALS · POWERED BY GOOGLE FLIGHTS + CLAUDE AI · ALWAYS VERIFY BEFORE BOOKING</span>
+</footer>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────
+let allDeals = [];
+let region   = "All";
+let stops    = "all";
+let maxPrice = 2000;
+let sortBy   = "savings";
+let aiScores = {};
+
+const API = "";
+
+// ── FETCH DEALS ───────────────────────────────────────────────────
+async function loadDeals() {
+  try {
+    const res  = await fetch(`${API}/api/deals`);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    allDeals = data.deals;
+    updateTicker();
+    document.getElementById("update-time").textContent =
+      "Updated " + new Date().toLocaleTimeString("de-DE", {hour:"2-digit",minute:"2-digit"});
+    render();
+  } catch(e) {
+    document.getElementById("content").innerHTML = `
+      <div class="error-box">
+        ⚠️ <strong>Could not connect to the proxy server.</strong><br><br>
+        Make sure you've run:<br>
+        <code style="color:#f0ece4">npm install</code> then <code style="color:#f0ece4">node server.js</code><br><br>
+        Then refresh this page. The server runs at <code style="color:#f0ece4">localhost:3001</code><br><br>
+        Error: ${e.message}
+      </div>`;
+  }
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────
+function setRegion(r, btn) {
+  region = r;
+  document.querySelectorAll("aside .pill-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+function setStops(s) {
+  stops = s;
+  document.getElementById("stops-all").className    = "pill-btn" + (s==="all"    ? " active-soft" : "");
+  document.getElementById("stops-nonstop").className = "pill-btn" + (s==="nonstop"? " active-soft" : "");
+  render();
+}
+function setMaxPrice(v) {
+  maxPrice = +v;
+  document.getElementById("price-label").textContent = "€" + v;
+  render();
+}
+function setSort(s, btn) {
+  sortBy = s;
+  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+
+// ── FILTER + SORT ─────────────────────────────────────────────────
+function filtered() {
+  return allDeals
+    .filter(d => region === "All" || d.region === region)
+    .filter(d => stops  === "all" || d.stops === 0)
+    .filter(d => d.price <= maxPrice)
+    .sort((a,b) => {
+      if (sortBy === "savings")  return (b.normalPrice||b.price*1.5) - b.price - ((a.normalPrice||a.price*1.5) - a.price);
+      if (sortBy === "price")    return a.price - b.price;
+      if (sortBy === "duration") return parseDur(a.duration) - parseDur(b.duration);
+      return 0;
+    });
+}
+function parseDur(s) {
+  if (!s || s==="N/A") return 9999;
+  const [h,m] = s.split("h ").map(x=>parseInt(x)||0);
+  return h*60+m;
+}
+
+// ── TICKER ────────────────────────────────────────────────────────
+function updateTicker() {
+  if (!allDeals.length) return;
+  const top = [...allDeals].sort((a,b)=>a.price-b.price).slice(0,5);
+  document.getElementById("ticker").innerHTML = top.map(d =>
+    `<span>${d.flag} ${d.city} <strong>€${d.price}</strong> · ${d.airline} · ${d.stops===0?"Nonstop":"1 stop"}</span>`
+  ).join('<span style="color:#ff8888">  ·  </span>');
+}
+
+// ── SCORE RING SVG ────────────────────────────────────────────────
+function scoreRing(score, color) {
+  const r=22, circ=2*Math.PI*r, dash=(score/100)*circ;
+  return `<svg width="54" height="54" style="transform:rotate(-90deg)">
+    <circle cx="27" cy="27" r="${r}" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+    <circle cx="27" cy="27" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+      stroke-dasharray="${dash} ${circ}" stroke-linecap="round"/>
+    <text x="27" y="27" text-anchor="middle" dominant-baseline="central"
+      style="font-size:12px;font-weight:600;fill:#f0ece4;transform:rotate(90deg);transform-origin:27px 27px;font-family:inherit">
+      ${score}
+    </text>
+  </svg>`;
+}
+
+// ── AI SCORE ──────────────────────────────────────────────────────
+async function scoreCard(id) {
+  const deal = allDeals.find(d => d.to === id);
+  if (!deal) return;
+  const card = document.getElementById("card-" + id);
+  const aiPanel = card.querySelector(".ai-panel");
+  const btn = card.querySelector(".btn-score");
+
+  // Toggle off if already scored
+  if (aiScores[id]) {
+    aiPanel.style.display = aiPanel.style.display === "none" ? "block" : "none";
+    return;
+  }
+
+  aiPanel.style.display = "block";
+  aiPanel.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
+    <div class="spinner" style="width:14px;height:14px;border-width:1.5px;border-top-color:var(--purple)"></div>
+    <span style="font-size:11px;color:var(--muted)">Scoring with AI…</span>
+  </div>`;
+
+  try {
+    const prompt = `Rate this Frankfurt flight deal 0-100 and give one punchy verdict (max 12 words):
+${deal.city} (${deal.to}): €${deal.price} · ${deal.airline} · ${deal.stops===0?"Nonstop":"1 stop"} · ${deal.duration}
+Return ONLY valid JSON no markdown: {"score":<number>,"verdict":"<max 12 words>","emoji":"<emoji>"}`;
+
+    const res  = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:200,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || "{}";
+    const ai   = JSON.parse(text.replace(/```json|```/g,"").trim());
+    aiScores[id] = ai;
+
+    const color = ai.score>=80?"#4ade80":ai.score>=60?"#f4a261":"#ff4d4d";
+    aiPanel.innerHTML = `<div class="ai-inner">
+      <div class="score-ring-wrap">${scoreRing(ai.score, color)}</div>
+      <div>
+        <div class="ai-label">AI Deal Score</div>
+        <div class="ai-verdict">${ai.emoji} ${ai.verdict}</div>
+      </div>
+    </div>`;
+    btn.className = "btn-score scored";
+    btn.textContent = `Score: ${ai.score}/100`;
+  } catch {
+    aiPanel.innerHTML = `<div style="font-size:11px;color:#555">Could not load score.</div>`;
+  }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render() {
+  const deals = filtered();
+  const count = deals.length;
+  const avgSave = count ? Math.round(deals.reduce((s,d)=>s+(d.normalPrice||d.price*1.4)-d.price,0)/count) : 0;
+
+  document.getElementById("result-count").textContent =
+    `${count} deal${count!==1?"s":""} · sorted by ${sortBy}`;
+  document.getElementById("stat-savings").textContent = `€${avgSave}`;
+  document.getElementById("stat-count").textContent   = `${count} deals · from FRA`;
+
+  if (!count) {
+    document.getElementById("content").innerHTML =
+      `<div class="empty"><div style="font-family:Fraunces,serif;font-size:18px;font-style:italic;margin-bottom:8px">No deals match your filters</div><div style="font-size:12px">Try raising the max price or selecting All regions</div></div>`;
+    return;
+  }
+
+  document.getElementById("content").innerHTML = `<div class="grid">${deals.map((d,i) => cardHTML(d,i)).join("")}</div>`;
+}
+
+function cardHTML(d, i) {
+  const normal   = d.normalPrice || Math.round(d.price * 1.45);
+  const savings  = normal - d.price;
+  const savePct  = Math.round((savings/normal)*100);
+  const heat     = savePct>=40 ? ["🔥 HOT","#ff4d4d"] : savePct>=25 ? ["⚡ GREAT","#f4a261"] : ["✅ GOOD","#4ade80"];
+  const heatCol  = heat[1];
+  const scored   = aiScores[d.to];
+  const scoreCol = scored ? (scored.score>=80?"#4ade80":scored.score>=60?"#f4a261":"#ff4d4d") : "#555";
+
+  return `
+<div class="card fade-up" id="card-${d.to}" style="animation-delay:${i*0.04}s">
+  <div class="card-top">
+    <div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:20px">${d.flag}</span>
+        <div>
+          <div class="city-name">${d.city}</div>
+          <div class="city-sub">${d.to} · ${d.region}</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="heat-badge" style="color:${heatCol}">${heat[0]}</div>
+      <div class="old-price">€${normal}</div>
+    </div>
+  </div>
+
+  <div class="price-row">
+    <div>
+      <div style="display:flex;align-items:baseline">
+        <span class="price-main">€${d.price}</span>
+        <span class="save-badge" style="background:${heatCol}22;color:${heatCol}">-${savePct}%</span>
+      </div>
+      <div class="price-sub">Save €${savings} per person</div>
+    </div>
+    <div class="flight-info">
+      <div>${d.airline}</div>
+      <div style="color:${d.stops===0?"var(--green)":"var(--muted)"}">
+        ${d.stops===0?"✈ Nonstop":"1 stop"} · ${d.duration}
+      </div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">📅 ${d.departDate} – ${d.returnDate}</span>
+    ${d.stops===0?'<span class="tag nonstop">Nonstop</span>':''}
+  </div>
+
+  <div class="ai-panel" style="display:${scored?"block":"none"}">
+    ${scored ? `<div class="ai-inner">
+      <div class="score-ring-wrap">${scoreRing(scored.score, scoreCol)}</div>
+      <div>
+        <div class="ai-label">AI Deal Score</div>
+        <div class="ai-verdict">${scored.emoji} ${scored.verdict}</div>
+      </div>
+    </div>` : ""}
+  </div>
+
+  <div class="card-actions">
+    <button class="btn-score ${scored?"scored":""}" onclick="scoreCard('${d.to}')">
+      ${scored ? `Score: ${scored.score}/100` : "⚡ AI Score"}
+    </button>
+    <a class="btn-book" href="${d.bookingUrl}" target="_blank" rel="noopener">
+      Book Deal →
+    </a>
+  </div>
+</div>`;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadDeals();
+// Auto-refresh every 10 minutes
+setInterval(loadDeals, 10 * 60 * 1000);
+</script>
+
+</body>
+</html>
